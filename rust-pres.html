@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Understand common concepts in Rust</title>
+<meta name="author" content="(Tiago Guimarães)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/reveal.css"/>
+
+<link rel="stylesheet" href="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/theme/moon.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Understand common concepts in Rust</h1><h2 class="author">Tiago Guimarães</h2><h2 class="date">2021-03-03 Wed</h2><p class="date">Created: 2021-03-03 Wed 11:32</p>
+</section>
+
+<section>
+<section id="slide-orgac152e6">
+<h2 id="orgac152e6">Understand common concepts in Rust</h2>
+<div class="outline-text-2" id="text-orgac152e6">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgc9c9dcc">
+<h3 id="orgc9c9dcc">Introduction</h3>
+<p>
+<a href="https://play.rust-lang.org">Rust Playground</a>
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgad31084">
+<h3 id="orgad31084">Create and use variables</h3>
+<div class="outline-text-3" id="text-orgad31084">
+</div>
+</section>
+<section id="slide-org5ab1408">
+<h4 id="org5ab1408">let</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+  <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">a_number</span> = <span style="color: #ff995e; font-weight: bold;">10</span>;
+  <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">a_boolean</span> = <span style="color: #c099ff;">true</span>;
+
+  <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"the number is </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">."</span>, a_number<span style="color: #ff995e;">)</span>;
+  <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"the boolean is </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">."</span>, a_boolean<span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org56e4d80">
+<h4 id="org56e4d80">mutability</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+  <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">a_number</span> = <span style="color: #ff995e; font-weight: bold;">10</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">error: cannot assign twice to immutable variable `a_number`</span>
+  <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"the number is </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">."</span>, a_number<span style="color: #ff995e;">)</span>;
+  a_number = <span style="color: #ff995e; font-weight: bold;">15</span>;
+  <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"and now the number is </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">."</span>, a_number<span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orga6e4895">
+<h4 id="orga6e4895">shadowing</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">number</span> = <span style="color: #ff995e; font-weight: bold;">5</span>;          <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">the first binding is created using the name "number"</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">number</span> = number + <span style="color: #ff995e; font-weight: bold;">5</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">a different binding shadows the name "number"</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">number</span> = number * <span style="color: #ff995e; font-weight: bold;">2</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">again, a new binding is created</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"The number is: </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, number<span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6d23c75">
+<h3 id="org6d23c75">Learn about data types</h3>
+<div class="outline-text-3" id="text-org6d23c75">
+</div>
+</section>
+<section id="slide-org2319c7d">
+<h4 id="org2319c7d">type annotations</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">explicit</span>
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">number</span>: <span style="color: #ffc777;">u32</span> = <span style="color: #c3e88d;">"42"</span>.parse<span style="color: #c099ff;">()</span>.expect<span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"Not a number!"</span><span style="color: #c099ff;">)</span>;
+
+<span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">but which type?</span>
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">number</span> = <span style="color: #c3e88d;">"42"</span>.parse<span style="color: #c099ff;">()</span>.expect<span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"Not a number!"</span><span style="color: #c099ff;">)</span>;
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org1da81ea">
+<h4 id="org1da81ea">number types</h4>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Length</th>
+<th scope="col" class="org-left">Signed</th>
+<th scope="col" class="org-left">Unsigned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">8-bit</td>
+<td class="org-left">i8</td>
+<td class="org-left">u8</td>
+</tr>
+
+<tr>
+<td class="org-left">16-bit</td>
+<td class="org-left">i16</td>
+<td class="org-left">u16</td>
+</tr>
+
+<tr>
+<td class="org-left">32-bit</td>
+<td class="org-left">i32</td>
+<td class="org-left">u32</td>
+</tr>
+
+<tr>
+<td class="org-left">64-bit</td>
+<td class="org-left">i64</td>
+<td class="org-left">u64</td>
+</tr>
+
+<tr>
+<td class="org-left">128-bit</td>
+<td class="org-left">i128</td>
+<td class="org-left">u128</td>
+</tr>
+
+<tr>
+<td class="org-left">arch</td>
+<td class="org-left">isize</td>
+<td class="org-left">usize</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-org89e9256">
+<h4 id="org89e9256">floats</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">x</span> = <span style="color: #ff995e; font-weight: bold;">2</span>.<span style="color: #ff995e; font-weight: bold;">0</span>;      <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">f64, default type</span>
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">y</span>: <span style="color: #ffc777;">f32</span> = <span style="color: #ff995e; font-weight: bold;">3</span>.<span style="color: #ff995e; font-weight: bold;">0</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">f32, via type annotation</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org288ca44">
+<h4 id="org288ca44">arithmetic operations</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Addition</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"1 + 2 = </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, <span style="color: #ff995e; font-weight: bold;">1u32</span> + <span style="color: #ff995e; font-weight: bold;">2</span><span style="color: #ff995e;">)</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Subtraction</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"1 - 2 = </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, <span style="color: #ff995e; font-weight: bold;">1i32</span> - <span style="color: #ff995e; font-weight: bold;">2</span><span style="color: #ff995e;">)</span>;
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">^ Try changing `1i32` to `1u32` to see why the type is important</span>
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Integer Division</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"9 / 2 = </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, <span style="color: #ff995e; font-weight: bold;">9u32</span> / <span style="color: #ff995e; font-weight: bold;">2</span><span style="color: #ff995e;">)</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Float Division</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"9 / 2 = </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, <span style="color: #ff995e; font-weight: bold;">9</span>.<span style="color: #ff995e; font-weight: bold;">0</span> / <span style="color: #ff995e; font-weight: bold;">2</span>.<span style="color: #ff995e; font-weight: bold;">0</span><span style="color: #ff995e;">)</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Multiplication</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"3 * 6 = </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, <span style="color: #ff995e; font-weight: bold;">3</span> * <span style="color: #ff995e; font-weight: bold;">6</span><span style="color: #ff995e;">)</span>
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orga8d09a3">
+<h4 id="orga8d09a3">booleans</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">true</span>;
+<span style="color: #c099ff;">false</span>;
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">is_bigger</span> = <span style="color: #ff995e; font-weight: bold;">1</span> &gt; <span style="color: #ff995e; font-weight: bold;">4</span>;
+<span style="color: #c099ff;">println!</span><span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"</span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, is_bigger<span style="color: #c099ff;">)</span>;  <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints "false"</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org5734ffe">
+<h4 id="org5734ffe">characters and strings</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">characters use single quotes</span>
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">c</span> = <span style="color: #c3e88d;">'z'</span>;
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">z</span> = <span style="color: #c3e88d;">'&#8484;'</span>;
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">heart_eyed_cat</span> = <span style="color: #c3e88d;">'&#128571;'</span>;
+
+<span style="color: #c099ff;">let</span> <span style="color: #c099ff;">mut</span> <span style="color: #ff98a4;">hello</span> = <span style="color: #ffc777;">String</span>::from<span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"Hello, "</span><span style="color: #c099ff;">)</span>;  <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">create a String from a string literal</span>
+hello.push<span style="color: #c099ff;">(</span><span style="color: #c3e88d;">'w'</span><span style="color: #c099ff;">)</span>;                          <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">push a character into our String</span>
+hello.push_str<span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"orld!"</span><span style="color: #c099ff;">)</span>;                  <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">push a string literal into our String</span>
+<span style="color: #c099ff;">println!</span><span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"</span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, hello<span style="color: #c099ff;">)</span>
+
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org84c21a1">
+<h4 id="org84c21a1">tuples</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+  <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">tuple</span> = <span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"hello"</span>, <span style="color: #ff995e; font-weight: bold;">5</span>, <span style="color: #c3e88d;">'c'</span><span style="color: #ff995e;">)</span>;
+
+  <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>tuple.<span style="color: #ff995e; font-weight: bold;">0</span>, <span style="color: #c3e88d;">"hello"</span><span style="color: #ff995e;">)</span>;
+  <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>tuple.<span style="color: #ff995e; font-weight: bold;">1</span>, <span style="color: #ff995e; font-weight: bold;">5</span><span style="color: #ff995e;">)</span>;
+  <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>tuple.<span style="color: #ff995e; font-weight: bold;">2</span>, <span style="color: #c3e88d;">'c'</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orge9cd507">
+<h3 id="orge9cd507">Learn about structs and enums</h3>
+<div class="outline-text-3" id="text-orge9cd507">
+</div>
+</section>
+<section id="slide-org981a988">
+<h4 id="org981a988">struct kinds</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">A struct with named fields</span>
+<span style="color: #c099ff;">struct</span> <span style="color: #ffc777;">Person</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #ff98a4;">name</span>: <span style="color: #ffc777;">String</span>,
+    <span style="color: #ff98a4;">age</span>: <span style="color: #ffc777;">u8</span>,
+    <span style="color: #ff98a4;">likes_oranges</span>: <span style="color: #ffc777;">bool</span>
+<span style="color: #c099ff;">}</span>
+
+<span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">A tuple struct</span>
+<span style="color: #c099ff;">struct</span> <span style="color: #ffc777;">Point2D</span><span style="color: #c099ff;">(</span><span style="color: #ffc777;">u32</span>, <span style="color: #ffc777;">u32</span><span style="color: #c099ff;">)</span>;
+
+<span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">A unit struct</span>
+<span style="color: #c099ff;">struct</span> <span style="color: #ffc777;">Unit</span>;
+</code></pre>
+</div>
+</section>
+<section id="slide-org1e72930">
+<h4 id="org1e72930">struct instantiation</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Instantiate a classic struct, with named fields. Order does not matter.</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">person</span> = <span style="color: #ffc777;">Person</span> <span style="color: #ff995e;">{</span>
+        <span style="color: #ff98a4;">name</span>: <span style="color: #ffc777;">String</span>::from<span style="color: #ff98a4;">(</span><span style="color: #c3e88d;">"Adam"</span><span style="color: #ff98a4;">)</span>,
+        <span style="color: #ff98a4;">likes_oranges</span>: <span style="color: #c099ff;">true</span>,
+        <span style="color: #ff98a4;">age</span>: <span style="color: #ff995e; font-weight: bold;">25</span>
+    <span style="color: #ff995e;">}</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Instantiate a tuple struct by passing the values in the same order as defined.</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">origin</span> = <span style="color: #ffc777;">Point2D</span><span style="color: #ff995e;">(</span><span style="color: #ff995e; font-weight: bold;">0</span>, <span style="color: #ff995e; font-weight: bold;">0</span><span style="color: #ff995e;">)</span>
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Instantiate a unit struct.</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">unit</span> = <span style="color: #ffc777;">Unit</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org120caa6">
+<h4 id="org120caa6">enums</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">enum</span> <span style="color: #ffc777;">WebEvent</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">An enum may either be unit-like,</span>
+    <span style="color: #ffc777;">PageLoad</span>,
+    <span style="color: #ffc777;">PageUnload</span>,
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">An enum can include characters and strings</span>
+    <span style="color: #ffc777;">KeyPress</span><span style="color: #ff995e;">(</span><span style="color: #ffc777;">char</span><span style="color: #ff995e;">)</span>,
+    <span style="color: #ffc777;">Paste</span><span style="color: #ff995e;">(</span><span style="color: #ffc777;">String</span><span style="color: #ff995e;">)</span>,
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">or include tuple structs</span>
+    <span style="color: #ffc777;">Click</span> <span style="color: #ff995e;">{</span> <span style="color: #ff98a4;">x</span>: <span style="color: #ffc777;">i64</span>, <span style="color: #ff98a4;">y</span>: <span style="color: #ffc777;">i64</span> <span style="color: #ff995e;">}</span>,
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org6d427f0">
+<h3 id="org6d427f0">Create reusable functionality with functions</h3>
+<div class="outline-text-3" id="text-org6d427f0">
+</div>
+</section>
+<section id="slide-org86ef6db">
+<h4 id="org86ef6db">functions</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"Hello, world!"</span><span style="color: #ff995e;">)</span>;
+    another_function<span style="color: #ff995e;">()</span>;
+<span style="color: #c099ff;">}</span>
+
+<span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">another_function</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"Hello from another function!"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org846ad88">
+<h4 id="org846ad88">parameters</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">is_divisible_by</span><span style="color: #c099ff;">(</span><span style="color: #ff98a4;">dividend</span>: <span style="color: #ffc777;">u32</span>, <span style="color: #ff98a4;">divisor</span>: <span style="color: #ffc777;">u32</span><span style="color: #c099ff;">)</span> -&gt; <span style="color: #ffc777;">bool</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">If the divisor is zero, we want to return early with a `false` value</span>
+    <span style="color: #c099ff;">if</span> divisor == <span style="color: #ff995e; font-weight: bold;">0</span> <span style="color: #ff995e;">{</span>
+    <span style="color: #c099ff;">return</span> <span style="color: #c099ff;">false</span>;
+    <span style="color: #ff995e;">}</span>
+    dividend % divisor == <span style="color: #ff995e; font-weight: bold;">0</span>
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org7ce64b8">
+<h4 id="org7ce64b8">calling a function</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">is_divisible_by</span><span style="color: #c099ff;">(</span><span style="color: #ff98a4;">dividend</span>: <span style="color: #ffc777;">u32</span>, <span style="color: #ff98a4;">divisor</span>: <span style="color: #ffc777;">u32</span><span style="color: #c099ff;">)</span> -&gt; <span style="color: #ffc777;">bool</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">if</span> divisor == <span style="color: #ff995e; font-weight: bold;">0</span> <span style="color: #ff995e;">{</span>
+    <span style="color: #c099ff;">return</span> <span style="color: #c099ff;">false</span>;
+    <span style="color: #ff995e;">}</span>
+    dividend % divisor == <span style="color: #ff995e; font-weight: bold;">0</span>
+<span style="color: #c099ff;">}</span>
+
+<span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>is_divisible_by<span style="color: #ff98a4;">(</span><span style="color: #ff995e; font-weight: bold;">2</span>, <span style="color: #ff995e; font-weight: bold;">3</span><span style="color: #ff98a4;">)</span>, <span style="color: #c099ff;">false</span><span style="color: #ff995e;">)</span>;
+    <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>is_divisible_by<span style="color: #ff98a4;">(</span><span style="color: #ff995e; font-weight: bold;">5</span>, <span style="color: #ff995e; font-weight: bold;">1</span><span style="color: #ff98a4;">)</span>, <span style="color: #c099ff;">true</span><span style="color: #ff995e;">)</span>;
+    <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>is_divisible_by<span style="color: #ff98a4;">(</span><span style="color: #ff995e; font-weight: bold;">24</span>, <span style="color: #ff995e; font-weight: bold;">6</span><span style="color: #ff98a4;">)</span>, <span style="color: #c099ff;">true</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orga4b4630">
+<h4 id="orga4b4630">breaking things on purpose</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">is_divisible_by</span><span style="color: #c099ff;">(</span><span style="color: #ff98a4;">dividend</span>: <span style="color: #ffc777;">u32</span>, <span style="color: #ff98a4;">divisor</span>: <span style="color: #ffc777;">u32</span><span style="color: #c099ff;">)</span> -&gt; <span style="color: #ffc777;">char</span> <span style="color: #c099ff;">{</span>
+<span style="color: #7a88cf;">//                                                 </span><span style="color: #7a88cf;">^^^^</span>
+</code></pre>
+</div>
+
+<pre class="example" id="org1ef3d27">
+error[E0308]: mismatched types
+     --&gt; src/main.rs:3:16
+      |
+    1 | fn is_divisible_by(dividend: u32, divisor: u32) -&gt; char {
+      |                                                    ---- expected `char` because of return type
+    2 |     if divisor == 0 {
+    3 |         return false;
+      |                ^^^^^ expected `char`, found `bool`
+
+    error[E0308]: mismatched types
+     --&gt; src/main.rs:5:5
+      |
+    1 | fn is_divisible_by(dividend: u32, divisor: u32) -&gt; char {
+      |                                                    ---- expected `char` because of return type
+    ...
+    5 |     dividend % divisor == 0
+      |     ^^^^^^^^^^^^^^^^^^^^^^^ expected `char`, found `bool`
+</pre>
+</section>
+</section>
+<section>
+<section id="slide-org45d9b09">
+<h3 id="org45d9b09">Use collection types</h3>
+<div class="outline-text-3" id="text-org45d9b09">
+</div>
+</section>
+<section id="slide-orgcfdef35">
+<h4 id="orgcfdef35">arrays</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">a comma-separated list inside of brackets</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">weekdays</span> = <span style="color: #ff995e;">[</span><span style="color: #c3e88d;">"Monday"</span>, <span style="color: #c3e88d;">"Tuesday"</span>, <span style="color: #c3e88d;">"Wednesday"</span>, <span style="color: #c3e88d;">"Thursday"</span>, <span style="color: #c3e88d;">"Friday"</span>, <span style="color: #c3e88d;">"Saturday"</span>, <span style="color: #c3e88d;">"Sunday"</span><span style="color: #ff995e;">]</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">initialize an array of 512 elements where every element is a zero</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">byte_buffer</span> = <span style="color: #ff995e;">[</span><span style="color: #ff995e; font-weight: bold;">0_u8</span>; <span style="color: #ff995e; font-weight: bold;">512</span><span style="color: #ff995e;">]</span>;
+
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">letters</span> = <span style="color: #ff995e;">[</span><span style="color: #c3e88d;">'a'</span>, <span style="color: #c3e88d;">'b'</span>, <span style="color: #c3e88d;">'c'</span>, <span style="color: #c3e88d;">'d'</span>, <span style="color: #c3e88d;">'e'</span>, <span style="color: #c3e88d;">'f'</span>, <span style="color: #c3e88d;">'g'</span><span style="color: #ff995e;">]</span>;
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"first element of the array: </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, letters<span style="color: #ff98a4;">[</span><span style="color: #ff995e; font-weight: bold;">0</span><span style="color: #ff98a4;">]</span><span style="color: #ff995e;">)</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints 'a'</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"second element of the array: </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, letters<span style="color: #ff98a4;">[</span><span style="color: #ff995e; font-weight: bold;">1</span><span style="color: #ff98a4;">]</span><span style="color: #ff995e;">)</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints 'b'</span>
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Uncomment to see an error.</span>
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">println!("invalid array access: {}", letters[99]);  // our `letters` array has only 7 elements</span>
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+</section>
+<section id="slide-org410d868">
+<h4 id="org410d868">vectors</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">three_numbers</span> = <span style="color: #86e1fc; font-weight: bold;">vec!</span><span style="color: #c099ff;">[</span><span style="color: #ff995e; font-weight: bold;">1</span>, <span style="color: #ff995e; font-weight: bold;">2</span>, <span style="color: #ff995e; font-weight: bold;">3</span><span style="color: #c099ff;">]</span>;
+<span style="color: #c099ff;">println!</span><span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"Initial vector: </span><span style="color: #c3e88d; font-style: italic;">{:?}</span><span style="color: #c3e88d;">"</span>, three_numbers<span style="color: #c099ff;">)</span>;  <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints "[1, 2, 3]"</span>
+
+<span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">the vec! macro also accepts the same syntax as the array constructor</span>
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">ten_zeroes</span> = <span style="color: #86e1fc; font-weight: bold;">vec!</span><span style="color: #c099ff;">[</span><span style="color: #ff995e; font-weight: bold;">0</span>; <span style="color: #ff995e; font-weight: bold;">10</span><span style="color: #c099ff;">]</span>;
+<span style="color: #c099ff;">println!</span><span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"Ten zeroes: </span><span style="color: #c3e88d; font-style: italic;">{:?}</span><span style="color: #c3e88d;">"</span>, ten_zeroes<span style="color: #c099ff;">)</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgceeb9a2">
+<h4 id="orgceeb9a2">the <code>vec![]</code> macro</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #c099ff;">mut</span> <span style="color: #ff98a4;">v</span> = <span style="color: #ffc777;">Vec</span>::new<span style="color: #c099ff;">()</span>;  <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">creates an empty vector,</span>
+  v.push<span style="color: #c099ff;">(</span><span style="color: #ff995e; font-weight: bold;">5</span><span style="color: #c099ff;">)</span>;             <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">pushes the number five into it...</span>
+  v.push<span style="color: #c099ff;">(</span><span style="color: #ff995e; font-weight: bold;">6</span><span style="color: #c099ff;">)</span>;             <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">... an then six, and so on</span>
+  v.push<span style="color: #c099ff;">(</span><span style="color: #ff995e; font-weight: bold;">7</span><span style="color: #c099ff;">)</span>;
+  v.push<span style="color: #c099ff;">(</span><span style="color: #ff995e; font-weight: bold;">8</span><span style="color: #c099ff;">)</span>;
+<span style="color: #c099ff;">println!</span><span style="color: #c099ff;">(</span><span style="color: #c3e88d;">"</span><span style="color: #c3e88d; font-style: italic;">{:?}</span><span style="color: #c3e88d;">"</span>, v<span style="color: #c099ff;">)</span>;     <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints [5, 6, 7, 8]</span>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org5571f60">
+<h4 id="org5571f60">hashmaps</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">use</span> <span style="color: #ff995e;">std</span>::<span style="color: #ff995e;">collections</span>::<span style="color: #ffc777;">HashMap</span>;
+
+<span style="color: #c099ff;">fn</span> <span style="color: #82aaff;">main</span><span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #c099ff;">mut</span> <span style="color: #ff98a4;">book_reviews</span> = <span style="color: #ffc777;">HashMap</span>::new<span style="color: #ff995e;">()</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Review some books.</span>
+    book_reviews.insert<span style="color: #ff995e;">(</span>
+        <span style="color: #c3e88d;">"Adventures of Huckleberry Finn"</span>,
+        <span style="color: #c3e88d;">"My favorite book."</span>
+    <span style="color: #ff995e;">)</span>;
+    book_reviews.insert<span style="color: #ff995e;">(</span>
+        <span style="color: #c3e88d;">"Grimms' Fairy Tales"</span>,
+        <span style="color: #c3e88d;">"Masterpiece."</span>
+    <span style="color: #ff995e;">)</span>;
+    book_reviews.insert<span style="color: #ff995e;">(</span>
+        <span style="color: #c3e88d;">"Pride and Prejudice"</span>,
+        <span style="color: #c3e88d;">"Very enjoyable."</span>
+    <span style="color: #ff995e;">)</span>;
+    book_reviews.insert<span style="color: #ff995e;">(</span>
+        <span style="color: #c3e88d;">"The Adventures of Sherlock Holmes"</span>,
+        <span style="color: #c3e88d;">"Eye lyked it alot."</span>
+    <span style="color: #ff995e;">)</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">inspect</span>
+    <span style="color: #c099ff;">if</span> !book_reviews.contains_key<span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"Les Mis&#233;rables"</span><span style="color: #ff995e;">)</span> <span style="color: #ff995e;">{</span>
+        <span style="color: #c099ff;">println!</span><span style="color: #ff98a4;">(</span>
+            <span style="color: #c3e88d;">"We've got </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;"> reviews, but Les Mis&#233;rables ain't one."</span>,
+            book_reviews.len<span style="color: #b4f9f8;">()</span>
+        <span style="color: #ff98a4;">)</span>;
+    <span style="color: #ff995e;">}</span>
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Check if contains and remove</span>
+    <span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">sherlock</span> = <span style="color: #c3e88d;">"The Adventures of Sherlock Holmes"</span>;
+    <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>book_reviews.contains_key<span style="color: #ff98a4;">(</span>sherlock<span style="color: #ff98a4;">)</span>, <span style="color: #c099ff;">true</span><span style="color: #ff995e;">)</span>;
+    book_reviews.remove<span style="color: #ff995e;">(</span>sherlock<span style="color: #ff995e;">)</span>;
+    <span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #ff995e;">(</span>book_reviews.contains_key<span style="color: #ff98a4;">(</span>sherlock<span style="color: #ff98a4;">)</span>, <span style="color: #c099ff;">false</span><span style="color: #ff995e;">)</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">Searching for an existing key returns the value associated to it</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"Review for Jane: </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, book_reviews<span style="color: #ff98a4;">[</span><span style="color: #c3e88d;">"Pride and Prejudice"</span><span style="color: #ff98a4;">]</span><span style="color: #ff995e;">)</span>;
+
+    <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">But searching for a nonexisting key will cause a panic</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"Review for Herman: </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, book_reviews<span style="color: #ff98a4;">[</span><span style="color: #c3e88d;">"Moby Dick"</span><span style="color: #ff98a4;">]</span><span style="color: #ff995e;">)</span>; <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">panics!</span>
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org6e40d8e">
+<h3 id="org6e40d8e">Iterate through code with control flow</h3>
+<div class="outline-text-3" id="text-org6e40d8e">
+</div>
+</section>
+<section id="slide-orgc33cbab">
+<h4 id="orgc33cbab"><code>if/else</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">if</span> <span style="color: #ff995e; font-weight: bold;">1</span> == <span style="color: #ff995e; font-weight: bold;">2</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"whoops, mathematics broke"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span> <span style="color: #c099ff;">else</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"everything's fine!"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+</section>
+<section id="slide-org577b6e3">
+<h4 id="org577b6e3"><code>if/else</code> is an expression</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">formal</span> = <span style="color: #c099ff;">true</span>;
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">greeting</span> = <span style="color: #c099ff;">if</span> formal <span style="color: #c099ff;">{</span>
+    <span style="color: #c3e88d;">"Good evening."</span>
+<span style="color: #c099ff;">}</span> <span style="color: #c099ff;">else</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c3e88d;">"Hello, friend!"</span>
+<span style="color: #c099ff;">}</span>;
+<span style="color: #c099ff;">println!</span><span style="color: #c099ff;">(</span>greeting<span style="color: #c099ff;">)</span> <span style="color: #7a88cf;">// </span><span style="color: #7a88cf;">prints "Good evening."</span>
+</code></pre>
+</div>
+</section>
+<section id="slide-org55dadfd">
+<h4 id="org55dadfd"><code>else</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">number</span> = <span style="color: #ff995e; font-weight: bold;">6</span>;
+
+<span style="color: #c099ff;">if</span> number % <span style="color: #ff995e; font-weight: bold;">4</span> == <span style="color: #ff995e; font-weight: bold;">0</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"number is divisible by 4"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span> <span style="color: #c099ff;">else</span> <span style="color: #c099ff;">if</span> number % <span style="color: #ff995e; font-weight: bold;">3</span> == <span style="color: #ff995e; font-weight: bold;">0</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"number is divisible by 3"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span> <span style="color: #c099ff;">else</span> <span style="color: #c099ff;">if</span> number % <span style="color: #ff995e; font-weight: bold;">2</span> == <span style="color: #ff995e; font-weight: bold;">0</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"number is divisible by 2"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span> <span style="color: #c099ff;">else</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"number is not divisible by 4, 3, or 2"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+</section>
+<section id="slide-orga98b457">
+<h4 id="orga98b457"><code>loop</code> forever</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">loop</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"I loop forever"</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+</section>
+<section id="slide-org476ed39">
+<h4 id="org476ed39"><code>break</code> from loops</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #c099ff;">mut</span> <span style="color: #ff98a4;">i</span> = <span style="color: #ff995e; font-weight: bold;">1</span>;
+<span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">something</span> = <span style="color: #c099ff;">loop</span> <span style="color: #c099ff;">{</span>
+    i *= <span style="color: #ff995e; font-weight: bold;">2</span>;
+    <span style="color: #c099ff;">if</span> i &gt; <span style="color: #ff995e; font-weight: bold;">100</span> <span style="color: #ff995e;">{</span>
+    <span style="color: #c099ff;">break</span> i;
+    <span style="color: #ff995e;">}</span>
+<span style="color: #c099ff;">}</span>;
+<span style="color: #86e1fc; font-weight: bold;">assert_eq!</span><span style="color: #c099ff;">(</span>something, <span style="color: #ff995e; font-weight: bold;">128</span><span style="color: #c099ff;">)</span>;
+</code></pre>
+</div>
+</section>
+<section id="slide-org1b58a79">
+<h4 id="org1b58a79">loop with <code>while</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #c099ff;">mut</span> <span style="color: #ff98a4;">counter</span> = <span style="color: #ff995e; font-weight: bold;">0</span>;
+
+<span style="color: #c099ff;">while</span> counter &lt; <span style="color: #ff995e; font-weight: bold;">10</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"hello"</span><span style="color: #ff995e;">)</span>;
+    counter = counter + <span style="color: #ff995e; font-weight: bold;">1</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+</section>
+<section id="slide-orgc030a7a">
+<h4 id="orgc030a7a">loop with <code>for</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim><span style="color: #c099ff;">let</span> <span style="color: #ff98a4;">a</span> = <span style="color: #c099ff;">[</span><span style="color: #ff995e; font-weight: bold;">10</span>, <span style="color: #ff995e; font-weight: bold;">20</span>, <span style="color: #ff995e; font-weight: bold;">30</span>, <span style="color: #ff995e; font-weight: bold;">40</span>, <span style="color: #ff995e; font-weight: bold;">50</span><span style="color: #c099ff;">]</span>;
+
+<span style="color: #c099ff;">for</span> <span style="color: #ff98a4;">element</span> <span style="color: #c099ff;">in</span> a.iter<span style="color: #c099ff;">()</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"the value is: </span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, element<span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+
+<span style="color: #c099ff;">for</span> <span style="color: #ff98a4;">item</span> <span style="color: #c099ff;">in</span> <span style="color: #ff995e; font-weight: bold;">0</span>..<span style="color: #ff995e; font-weight: bold;">5</span> <span style="color: #c099ff;">{</span>
+    <span style="color: #c099ff;">println!</span><span style="color: #ff995e;">(</span><span style="color: #c3e88d;">"</span><span style="color: #c3e88d; font-style: italic;">{}</span><span style="color: #c3e88d;">"</span>, item * <span style="color: #ff995e; font-weight: bold;">2</span><span style="color: #ff995e;">)</span>;
+<span style="color: #c099ff;">}</span>
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgf50f74e">
+<h3 id="orgf50f74e">Knowledge check</h3>
+<p>
+<a href="https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/11-knowledge-check">Knowledge Check</a>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orge0693d3">
+<h3 id="orge0693d3">Exercises</h3>
+<ol>
+<li><a href="https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/5-exercise-structs-enums">Exercise - Fix the code with structs and enums</a></li>
+<li><a href="https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/8-exercise-indexing">Exercise - Indexing</a></li>
+<li><a href="https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/9-exercise-hashmaps">Exercise - HashMaps</a></li>
+
+</ol>
+
+</section>
+</section>
+<section>
+<section id="slide-orga4312f3">
+<h3 id="orga4312f3">Summary</h3>
+</section>
+</section>
+</div>
+</div>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/reveal.js"></script>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/plugin/markdown/markdown.js"></script>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/plugin/zoom/zoom.js"></script>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/plugin/notes/notes.js"></script>
+
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+plugins: [RevealMarkdown,RevealZoom,RevealNotes],
+width:1800,
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+]
+});
+</script>
+</body>
+</html>

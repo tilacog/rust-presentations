@@ -1,0 +1,408 @@
+#+TITLE:     Understand common concepts in Rust
+#+AUTHOR:    Tiago Guimarães
+#+EMAIL:     tilacog@protonmail.com
+#+DATE:      2021-03-03 Wed
+#+OPTIONS: num:nil toc:nil
+#+REVEAL_ROOT: file:///home/tilacog/tiago/code/others/reveal.js-4.1.0
+#+REVEAL_HLEVEL: 2
+
+#+REVEAL_INIT_OPTIONS: width:1800
+
+* Understand common concepts in Rust
+** Introduction
+[[https://play.rust-lang.org][Rust Playground]]
+** Create and use variables
+*** let
+#+begin_src rust
+fn main() {
+  let a_number = 10;
+  let a_boolean = true;
+
+  println!("the number is {}.", a_number);
+  println!("the boolean is {}.", a_boolean);
+}
+#+end_src
+
+*** mutability
+#+begin_src rust
+fn main() {
+  let a_number = 10; // error: cannot assign twice to immutable variable `a_number`
+  println!("the number is {}.", a_number);
+  a_number = 15;
+  println!("and now the number is {}.", a_number);
+}
+#+end_src
+
+*** shadowing
+#+begin_src rust
+fn main() {
+    let number = 5;          // the first binding is created using the name "number"
+    let number = number + 5; // a different binding shadows the name "number"
+    let number = number * 2; // again, a new binding is created
+    println!("The number is: {}", number);
+}
+#+end_src
+
+** Learn about data types
+*** type annotations
+#+begin_src rust
+// explicit
+let number: u32 = "42".parse().expect("Not a number!");
+
+// but which type?
+let number = "42".parse().expect("Not a number!");
+#+end_src
+
+*** number types
+| Length  | Signed | Unsigned |
+|---------+--------+----------|
+| 8-bit   | i8     | u8       |
+| 16-bit  | i16    | u16      |
+| 32-bit  | i32    | u32      |
+| 64-bit  | i64    | u64      |
+| 128-bit | i128   | u128     |
+| arch    | isize  | usize    |
+
+*** floats
+#+begin_src rust
+let x = 2.0;      // f64, default type
+let y: f32 = 3.0; // f32, via type annotation
+#+end_src
+
+*** arithmetic operations
+#+begin_src rust
+fn main() {
+    // Addition
+    println!("1 + 2 = {}", 1u32 + 2);
+
+    // Subtraction
+    println!("1 - 2 = {}", 1i32 - 2);
+    // ^ Try changing `1i32` to `1u32` to see why the type is important
+
+    // Integer Division
+    println!("9 / 2 = {}", 9u32 / 2);
+
+    // Float Division
+    println!("9 / 2 = {}", 9.0 / 2.0);
+
+    // Multiplication
+    println!("3 * 6 = {}", 3 * 6)
+}
+#+end_src
+
+*** booleans
+#+begin_src rust
+true;
+false;
+let is_bigger = 1 > 4;
+println!("{}", is_bigger);  // prints "false"
+#+end_src
+
+*** characters and strings
+#+begin_src rust
+// characters use single quotes
+let c = 'z';
+let z = 'ℤ';
+let heart_eyed_cat = '😻';
+
+let mut hello = String::from("Hello, ");  // create a String from a string literal
+hello.push('w');                          // push a character into our String
+hello.push_str("orld!");                  // push a string literal into our String
+println!("{}", hello)
+
+#+end_src
+
+*** tuples
+#+begin_src rust
+fn main() {
+  let tuple = ("hello", 5, 'c');
+
+  assert_eq!(tuple.0, "hello");
+  assert_eq!(tuple.1, 5);
+  assert_eq!(tuple.2, 'c');
+}
+#+end_src
+
+** Learn about structs and enums
+*** struct kinds
+#+begin_src rust
+// A struct with named fields
+struct Person {
+    name: String,
+    age: u8,
+    likes_oranges: bool
+}
+
+// A tuple struct
+struct Point2D(u32, u32);
+
+// A unit struct
+struct Unit;
+#+end_src
+*** struct instantiation
+#+begin_src rust
+fn main() {
+    // Instantiate a classic struct, with named fields. Order does not matter.
+    let person = Person {
+        name: String::from("Adam"),
+        likes_oranges: true,
+        age: 25
+    };
+
+    // Instantiate a tuple struct by passing the values in the same order as defined.
+    let origin = Point2D(0, 0)
+
+    // Instantiate a unit struct.
+    let unit = Unit;
+}
+#+end_src
+
+*** enums
+#+begin_src rust
+enum WebEvent {
+    // An enum may either be unit-like,
+    PageLoad,
+    PageUnload,
+    // An enum can include characters and strings
+    KeyPress(char),
+    Paste(String),
+    // or include tuple structs
+    Click { x: i64, y: i64 },
+}
+#+end_src
+
+** Create reusable functionality with functions
+
+
+*** functions
+#+begin_src rust
+fn main() {
+    println!("Hello, world!");
+    another_function();
+}
+
+fn another_function() {
+    println!("Hello from another function!");
+}
+#+end_src
+
+*** parameters
+#+begin_src rust
+fn is_divisible_by(dividend: u32, divisor: u32) -> bool {
+    // If the divisor is zero, we want to return early with a `false` value
+    if divisor == 0 {
+    return false;
+    }
+    dividend % divisor == 0
+}
+#+end_src
+
+*** calling a function
+#+begin_src rust
+fn is_divisible_by(dividend: u32, divisor: u32) -> bool {
+    if divisor == 0 {
+    return false;
+    }
+    dividend % divisor == 0
+}
+
+fn main() {
+    assert_eq!(is_divisible_by(2, 3), false);
+    assert_eq!(is_divisible_by(5, 1), true);
+    assert_eq!(is_divisible_by(24, 6), true);
+}
+#+end_src
+
+*** breaking things on purpose
+#+begin_src rust
+fn is_divisible_by(dividend: u32, divisor: u32) -> char {
+//                                                 ^^^^
+#+end_src
+
+#+begin_example
+error[E0308]: mismatched types
+     --> src/main.rs:3:16
+      |
+    1 | fn is_divisible_by(dividend: u32, divisor: u32) -> char {
+      |                                                    ---- expected `char` because of return type
+    2 |     if divisor == 0 {
+    3 |         return false;
+      |                ^^^^^ expected `char`, found `bool`
+
+    error[E0308]: mismatched types
+     --> src/main.rs:5:5
+      |
+    1 | fn is_divisible_by(dividend: u32, divisor: u32) -> char {
+      |                                                    ---- expected `char` because of return type
+    ...
+    5 |     dividend % divisor == 0
+      |     ^^^^^^^^^^^^^^^^^^^^^^^ expected `char`, found `bool`
+#+end_example
+** Use collection types
+
+*** arrays
+#+begin_src rust
+  fn main() {
+      // a comma-separated list inside of brackets
+      let weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+      // initialize an array of 512 elements where every element is a zero
+      let byte_buffer = [0_u8; 512];
+
+      let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+      println!("first element of the array: {}", letters[0]); // prints 'a'
+      println!("second element of the array: {}", letters[1]); // prints 'b'
+
+      // Uncomment to see an error.
+      // println!("invalid array access: {}", letters[99]);  // our `letters` array has only 7 elements
+  }
+#+end_src
+*** vectors
+
+#+begin_src rust
+let three_numbers = vec![1, 2, 3];
+println!("Initial vector: {:?}", three_numbers);  // prints "[1, 2, 3]"
+
+// the vec! macro also accepts the same syntax as the array constructor
+let ten_zeroes = vec![0; 10];
+println!("Ten zeroes: {:?}", ten_zeroes); // prints [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#+end_src
+
+*** the =vec![]= macro
+#+begin_src rust
+let mut v = Vec::new();  // creates an empty vector,
+  v.push(5);             // pushes the number five into it...
+  v.push(6);             // ... an then six, and so on
+  v.push(7);
+  v.push(8);
+println!("{:?}", v);     // prints [5, 6, 7, 8]
+#+end_src
+
+*** hashmaps
+
+#+begin_src rust
+use std::collections::HashMap;
+
+fn main() {
+    let mut book_reviews = HashMap::new();
+
+    // Review some books.
+    book_reviews.insert(
+        "Adventures of Huckleberry Finn",
+        "My favorite book."
+    );
+    book_reviews.insert(
+        "Grimms' Fairy Tales",
+        "Masterpiece."
+    );
+    book_reviews.insert(
+        "Pride and Prejudice",
+        "Very enjoyable."
+    );
+    book_reviews.insert(
+        "The Adventures of Sherlock Holmes",
+        "Eye lyked it alot."
+    );
+
+    // inspect
+    if !book_reviews.contains_key("Les Misérables") {
+        println!(
+            "We've got {} reviews, but Les Misérables ain't one.",
+            book_reviews.len()
+        );
+    }
+
+    // Check if contains and remove
+    let sherlock = "The Adventures of Sherlock Holmes";
+    assert_eq!(book_reviews.contains_key(sherlock), true);
+    book_reviews.remove(sherlock);
+    assert_eq!(book_reviews.contains_key(sherlock), false);
+
+    // Searching for an existing key returns the value associated to it
+    println!("Review for Jane: {}", book_reviews["Pride and Prejudice"]);
+
+    // But searching for a nonexisting key will cause a panic
+    println!("Review for Herman: {}", book_reviews["Moby Dick"]); // panics!
+}
+#+end_src
+** Iterate through code with control flow
+*** =if/else=
+#+begin_src rust
+if 1 == 2 {
+    println!("whoops, mathematics broke");
+} else {
+    println!("everything's fine!");
+}
+#+end_src
+*** =if/else= is an expression
+#+begin_src rust
+let formal = true;
+let greeting = if formal {
+    "Good evening."
+} else {
+    "Hello, friend!"
+};
+println!(greeting) // prints "Good evening."
+#+end_src
+*** =else=
+#+begin_src rust
+let number = 6;
+
+if number % 4 == 0 {
+    println!("number is divisible by 4");
+} else if number % 3 == 0 {
+    println!("number is divisible by 3");
+} else if number % 2 == 0 {
+    println!("number is divisible by 2");
+} else {
+    println!("number is not divisible by 4, 3, or 2");
+}
+#+end_src
+*** =loop= forever
+#+begin_src rust
+loop {
+    println!("I loop forever");
+}
+#+end_src
+*** =break= from loops
+#+begin_src rust
+let mut i = 1;
+let something = loop {
+    i *= 2;
+    if i > 100 {
+    break i;
+    }
+};
+assert_eq!(something, 128);
+#+end_src
+*** loop with =while=
+#+begin_src rust
+let mut counter = 0;
+
+while counter < 10 {
+    println!("hello");
+    counter = counter + 1;
+}
+#+end_src
+*** loop with =for=
+#+begin_src rust
+let a = [10, 20, 30, 40, 50];
+
+for element in a.iter() {
+    println!("the value is: {}", element);
+}
+
+for item in 0..5 {
+    println!("{}", item * 2);
+}
+#+end_src
+
+** Knowledge check
+[[https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/11-knowledge-check][Knowledge Check]]
+
+** Exercises
+1. [[https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/5-exercise-structs-enums][Exercise - Fix the code with structs and enums]]
+2. [[https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/8-exercise-indexing][Exercise - Indexing]]
+3. [[https://docs.microsoft.com/en-us/learn/modules/rust-understand-common-concepts/9-exercise-hashmaps][Exercise - HashMaps]]
+
+** Summary
