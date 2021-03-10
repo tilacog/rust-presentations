@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Handle Errors in Rust</title>
+<meta name="author" content="(Tiago Guimarães)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/reveal.css"/>
+
+<link rel="stylesheet" href="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/theme/moon.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Handle Errors in Rust</h1><h2 class="author">Tiago Guimarães</h2><h2 class="date">2021-03-10 Wed</h2><p class="date">Created: 2021-03-10 Wed 11:11</p>
+</section>
+
+<section>
+<section id="slide-org4d019f4">
+<h2 id="org4d019f4">Understand common concepts in Rust</h2>
+<div class="outline-text-2" id="text-org4d019f4">
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org45f9d17">
+<h3 id="org45f9d17">Introduction</h3>
+<p>
+<a href="https://play.rust-lang.org">Rust Playground</a>
+</p>
+</section>
+</section>
+<section>
+<section id="slide-org99aab92">
+<h3 id="org99aab92">Panic</h3>
+<div class="outline-text-3" id="text-org99aab92">
+</div>
+</section>
+<section id="slide-orgc5a3b57">
+<h4 id="orgc5a3b57">first slide</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org845af93">
+<h3 id="org845af93">Option</h3>
+<div class="outline-text-3" id="text-org845af93">
+</div>
+</section>
+<section id="slide-org81ab05f">
+<h4 id="org81ab05f">first slide</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>
+</code></pre>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-orgbebe802">
+<h3 id="orgbebe802">Result</h3>
+<div class="outline-text-3" id="text-orgbebe802">
+</div>
+</section>
+<section id="slide-orgbf36740">
+<h4 id="orgbf36740">first slide</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>
+</code></pre>
+</div>
+</section>
+</section>
+</div>
+</div>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/reveal.js"></script>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/plugin/markdown/markdown.js"></script>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/plugin/zoom/zoom.js"></script>
+<script src="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/plugin/notes/notes.js"></script>
+
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+plugins: [RevealMarkdown,RevealZoom,RevealNotes],
+width:1800,
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+]
+});
+</script>
+</body>
+</html>

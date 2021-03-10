@@ -1,0 +1,28 @@
+#+TITLE:     Handle Errors in Rust
+#+AUTHOR:    Tiago Guimarães
+#+EMAIL:     tilacog@protonmail.com
+#+DATE:      2021-03-10 Wed
+#+OPTIONS: num:nil toc:nil
+#+REVEAL_ROOT: file:///home/tilacog/tiago/code/others/reveal.js-4.1.0
+#+REVEAL_HLEVEL: 2
+
+#+REVEAL_INIT_OPTIONS: width:1800
+
+* Handle Errors in Rust
+** Introduction
+[[https://play.rust-lang.org][Rust Playground]]
+** Panic
+*** first slide
+#+begin_src rust
+
+#+end_src
+** Option
+*** first slide
+#+begin_src rust
+
+#+end_src
+** Result
+*** first slide
+#+begin_src rust
+
+#+end_src
