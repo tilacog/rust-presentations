@@ -11,6 +11,7 @@
 
 <link rel="stylesheet" href="file:///home/tilacog/tiago/code/others/reveal.js-4.1.0/dist/theme/moon.css" id="theme"/>
 
+<link rel="stylesheet" href="file:///home/tilacog/tiago/presentations/rust-learning/custom.css"/>
 
 <!-- If the query includes 'print-pdf', include the PDF print sheet -->
 <script>
@@ -26,67 +27,360 @@
 <body>
 <div class="reveal">
 <div class="slides">
-<section id="sec-title-slide"><h1 class="title">Handle Errors in Rust</h1><h2 class="author">Tiago Guimarães</h2><h2 class="date">2021-03-10 Wed</h2><p class="date">Created: 2021-03-10 Wed 11:11</p>
+<section id="sec-title-slide"><h1 class="title">Handle Errors in Rust</h1><h2 class="author">Tiago Guimarães</h2><h2 class="date">2021-03-10 Wed</h2><p class="date">Created: 2021-03-10 Wed 18:37</p>
 </section>
 
 <section>
-<section id="slide-org4d019f4">
-<h2 id="org4d019f4">Understand common concepts in Rust</h2>
-<div class="outline-text-2" id="text-org4d019f4">
+<section id="slide-orgc198092">
+<h2 id="orgc198092">Handle Errors in Rust</h2>
+<div class="outline-text-2" id="text-orgc198092">
 </div>
 </section>
 </section>
 <section>
-<section id="slide-org45f9d17">
-<h3 id="org45f9d17">Introduction</h3>
+<section id="slide-orgfc59c4e">
+<h3 id="orgfc59c4e">Introduction</h3>
 <p>
 <a href="https://play.rust-lang.org">Rust Playground</a>
 </p>
 </section>
 </section>
 <section>
-<section id="slide-org99aab92">
-<h3 id="org99aab92">Panic</h3>
-<div class="outline-text-3" id="text-org99aab92">
+<section id="slide-orgce70670">
+<h3 id="orgce70670">Panic</h3>
+<div class="outline-text-3" id="text-orgce70670">
 </div>
 </section>
-<section id="slide-orgc5a3b57">
-<h4 id="orgc5a3b57">first slide</h4>
+<section id="slide-orgd27f8cb">
+<h4 id="orgd27f8cb">fatal errors</h4>
 <div class="org-src-container">
 
-<pre  class="src src-rust"><code trim>
+<pre  class="src src-rust"><code trim>fn main() {
+    panic!("Farewell!");
+}
 </code></pre>
 </div>
+
+</section>
+<section id="slide-orgb5e93bf">
+<h4 id="orgb5e93bf">out of bounds array access</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>fn main() {
+    let v = vec![0, 1, 2, 3];
+    println!("{}", v[6]); // this will cause a panic!
+}
+</code></pre>
+</div>
+
 </section>
 </section>
 <section>
-<section id="slide-org845af93">
-<h3 id="org845af93">Option</h3>
-<div class="outline-text-3" id="text-org845af93">
+<section id="slide-org8181a0d">
+<h3 id="org8181a0d">Option</h3>
+<div class="outline-text-3" id="text-org8181a0d">
 </div>
 </section>
-<section id="slide-org81ab05f">
-<h4 id="org81ab05f">first slide</h4>
+<section id="slide-orgd8d6361">
+<h4 id="orgd8d6361">The <code>Option</code> type</h4>
 <div class="org-src-container">
 
-<pre  class="src src-rust"><code trim>
+<pre  class="src src-rust"><code trim>enum Option&lt;T&gt; {
+    None,     // No element was found
+    Some(T),  // An element of type T was found
+}
 </code></pre>
 </div>
+
+</section>
+<section id="slide-org5f9ebbc">
+<h4 id="org5f9ebbc">Using <code>Option</code> on collections</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>fn main() {
+    let fruits = ["banana", "apple", "coconut", "orange", "strawberry"];
+
+    // pick the first item:
+    let first = fruits.get(0);
+    println!("{:?}", first);
+
+    // pick the third item:
+    let third = fruits.get(2);
+    println!("{:?}", third);
+
+    // pick the 99th item, which is non-existent:
+    let non_existent = fruits.get(99);
+    println!("{:?}", non_existent);
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org0439e5d">
+<h4 id="org0439e5d">Pattern Matching</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>fn main() {
+    let fruits = vec!["banana", "apple", "coconut", "orange", "strawberry"];
+
+    for &amp;index in [0, 2, 99].iter() {
+	match fruits.get(index) {
+	    Option::Some(fruit_name) =&gt; println!("It's a delicious {}!", fruit_name),
+	    Option::None =&gt; println!("There is no fruit! :("),
+	}
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org4aad272">
+<h4 id="org4aad272">Pattern Matching</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>fn main() {
+    let fruits = vec!["banana", "apple", "coconut", "orange", "strawberry"];
+    for &amp;index in [0, 2, 99].iter() {
+	match fruits.get(index) {
+	    Some(&amp;"coconut") =&gt; println!("Coconuts are awesome!!!"),
+	    Some(fruit_name) =&gt; println!("It's a delicious {}!", fruit_name),
+	    None =&gt; println!("There is no fruit! :("),
+	}
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgf9ebefe">
+<h4 id="orgf9ebefe"><code>if let</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>// ugly code
+let some_number: Option&lt;u8&gt; = Some(7);
+match some_number {
+    Some(7) =&gt; println!("That's my lucky number!"),
+    _ =&gt; (),
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgc8d4afd">
+<h4 id="orgc8d4afd"><code>if let</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>// beautiful code
+let some_number: Option&lt;u8&gt; = Some(7);
+if let Some(7) = some_u8_value {
+    println!("That's my lucky number!");
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org461ce0d">
+<h4 id="org461ce0d">unwrap and expect</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>let gift = Some("candy");
+assert_eq!(gift.unwrap(), "candy");
+
+let empty_gift: Option&lt;&amp;str&gt; = None;
+assert_eq!(empty_gift.unwrap(), "candy"); // This will panic!
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgfc304ad">
+<h4 id="orgfc304ad">expect</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>let a = Some("banana");
+assert_eq!(a.expect("not a banana!"), "banana");
+
+let b: Option&lt;&amp;str&gt; = None;
+b.expect("where are my bananas?"); // panics with `fruits are healthy`
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org5c3e51e">
+<h4 id="org5c3e51e"><code>unwrap_or</code></h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>assert_eq!(Some("dog").unwrap_or("cat"), "dog");
+assert_eq!(None.unwrap_or("cat"), "cat");
+</code></pre>
+</div>
+
 </section>
 </section>
 <section>
-<section id="slide-orgbebe802">
-<h3 id="orgbebe802">Result</h3>
-<div class="outline-text-3" id="text-orgbebe802">
+<section id="slide-orgcfc8fd5">
+<h3 id="orgcfc8fd5">Result</h3>
+<div class="outline-text-3" id="text-orgcfc8fd5">
 </div>
 </section>
-<section id="slide-orgbf36740">
-<h4 id="orgbf36740">first slide</h4>
+<section id="slide-org1c6ba2e">
+<h4 id="org1c6ba2e">the <code>Result</code> enum</h4>
 <div class="org-src-container">
 
-<pre  class="src src-rust"><code trim>
+<pre  class="src src-rust"><code trim>enum Result&lt;T, E&gt; {
+    Ok(T):  // A value T was obtained.
+    Err(E): // An error of type E was encountered instead.
+}
 </code></pre>
 </div>
+
+</section>
+<section id="slide-orge8c720e">
+<h4 id="orge8c720e">Safe Division by Zero</h4>
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>#[derive(Debug)]
+struct DivisionByZeroError;
+
+fn safe_division(dividend: f64, divisor: f64) -&gt; Result&lt;f64, DivisionByZeroError&gt; {
+    if divisor == 0.0 {
+	Err(DivisionByZeroError)
+    } else {
+	Ok(dividend / divisor)
+    }
+}
+
+fn main() {
+    println!("{:?}", safe_division(9.0, 3.0));
+    println!("{:?}", safe_division(4.0, 0.0));
+    println!("{:?}", safe_division(0.0, 2.0));
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org06fac85">
+<h4 id="org06fac85">Propagating errors</h4>
+<p>
+Long way: without the <code>?</code> operator
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>#![allow(unused)]
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn main() {
+    fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+	let f = File::open("hello.txt");
+
+	let mut f = match f {
+	    Ok(file) =&gt; file,
+	    Err(e) =&gt; return Err(e),
+	};
+
+	let mut s = String::new();
+
+	match f.read_to_string(&amp;mut s) {
+	    Ok(_) =&gt; Ok(s),
+	    Err(e) =&gt; Err(e),
+	}
+    }
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org4d65386">
+<h4 id="org4d65386">Propagating errors</h4>
+<p>
+Using the <code>?</code> operator
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>#![allow(unused)]
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&amp;mut s)?;
+    Ok(s)
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org5ae7ce5">
+<h4 id="org5ae7ce5">Propagating errors</h4>
+<p>
+Chaining the <code>?</code> operator
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>#![allow(unused)]
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    let mut s = String::new();
+
+    File::open("hello.txt")?.read_to_string(&amp;mut s)?;
+
+    Ok(s)
+}
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org78849bd">
+<h4 id="org78849bd">Propagating errors</h4>
+<p>
+Even better
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-rust"><code trim>use std::fs;
+use std::io;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    fs::read_to_string("hello.txt")
+}
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-org28d7f06">
+<h3 id="org28d7f06">Knowledge Check</h3>
+<p>
+<a href="https://docs.microsoft.com/en-us/learn/modules/rust-error-handling/7-check">https://docs.microsoft.com/en-us/learn/modules/rust-error-handling/7-check</a>
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org031b323">
+<h3 id="org031b323">Pesquisa</h3>
+<p>
+Estamos constantemente nos esforçando para melhorar nossos conteúdos
+e agradeceríamos se você pudesse responder esta breve pesquisa.
+</p>
+
+<ul>
+<li><a href="https://aka.ms/reactor-pesquisa">https://aka.ms/reactor-pesquisa</a></li>
+
+<li>Por favor, insira o código <code>12518</code> no início da pesquisa</li>
+
+</ul>
 </section>
 </section>
 </div>
@@ -102,7 +396,7 @@
 // https://github.com/hakimel/reveal.js#configuration
 Reveal.initialize({
 plugins: [RevealMarkdown,RevealZoom,RevealNotes],
-width:1800,
+width:1300,
 multiplex: {
     secret: '', // null if client
     id: '', // id, obtained from socket.io server

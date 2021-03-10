@@ -5,8 +5,8 @@
 #+OPTIONS: num:nil toc:nil
 #+REVEAL_ROOT: file:///home/tilacog/tiago/code/others/reveal.js-4.1.0
 #+REVEAL_HLEVEL: 2
-
-#+REVEAL_INIT_OPTIONS: width:1800
+#+REVEAL_EXTRA_CSS: file:///home/tilacog/tiago/presentations/rust-learning/custom.css
+#+REVEAL_INIT_OPTIONS: width:1300
 
 * Handle Errors in Rust
 ** Introduction
@@ -121,7 +121,7 @@ let b: Option<&str> = None;
 b.expect("where are my bananas?"); // panics with `fruits are healthy`
 #+end_src
 
-*** unwrap_or
+*** =unwrap_or=
 #+begin_src rust
 assert_eq!(Some("dog").unwrap_or("cat"), "dog");
 assert_eq!(None.unwrap_or("cat"), "cat");
@@ -129,7 +129,120 @@ assert_eq!(None.unwrap_or("cat"), "cat");
 
 ** Result
 
-*** first slide
+*** the =Result= enum
 #+begin_src rust
-
+enum Result<T, E> {
+    Ok(T):  // A value T was obtained.
+    Err(E): // An error of type E was encountered instead.
+}
 #+end_src
+
+*** Safe Division by Zero
+#+begin_src rust
+#[derive(Debug)]
+struct DivisionByZeroError;
+
+fn safe_division(dividend: f64, divisor: f64) -> Result<f64, DivisionByZeroError> {
+    if divisor == 0.0 {
+        Err(DivisionByZeroError)
+    } else {
+        Ok(dividend / divisor)
+    }
+}
+
+fn main() {
+    println!("{:?}", safe_division(9.0, 3.0));
+    println!("{:?}", safe_division(4.0, 0.0));
+    println!("{:?}", safe_division(0.0, 2.0));
+}
+#+end_src
+
+*** Propagating errors
+
+Long way: without the =?= operator
+
+#+begin_src rust
+#![allow(unused)]
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn main() {
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let f = File::open("hello.txt");
+
+        let mut f = match f {
+            Ok(file) => file,
+            Err(e) => return Err(e),
+        };
+
+        let mut s = String::new();
+
+        match f.read_to_string(&mut s) {
+            Ok(_) => Ok(s),
+            Err(e) => Err(e),
+        }
+    }
+}
+#+end_src
+
+*** Propagating errors
+
+Using the =?= operator
+
+#+begin_src rust
+#![allow(unused)]
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&mut s)?;
+    Ok(s)
+}
+#+end_src
+
+*** Propagating errors
+
+Chaining the =?= operator
+
+#+begin_src rust
+#![allow(unused)]
+use std::fs::File;
+use std::io;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let mut s = String::new();
+
+    File::open("hello.txt")?.read_to_string(&mut s)?;
+
+    Ok(s)
+}
+#+end_src
+
+*** Propagating errors
+
+Even better
+
+#+begin_src rust
+use std::fs;
+use std::io;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    fs::read_to_string("hello.txt")
+}
+#+end_src
+
+** Knowledge Check
+https://docs.microsoft.com/en-us/learn/modules/rust-error-handling/7-check
+
+** Pesquisa
+Estamos constantemente nos esforçando para melhorar nossos conteúdos
+e agradeceríamos se você pudesse responder esta breve pesquisa.
+
+- https://aka.ms/reactor-pesquisa
+
+- Por favor, insira o código ~12518~ no início da pesquisa
